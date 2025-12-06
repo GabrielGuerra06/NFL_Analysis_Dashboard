@@ -1,4 +1,4 @@
-
+﻿
 import streamlit as st
 import pandas as pd
 import numpy as np
@@ -562,12 +562,11 @@ def main():
     st.sidebar.markdown("###  Performance Settings")
     performance_mode = st.sidebar.radio(
         "Rendering Speed",
-        options=["âš¡ Fast (Recommended)", "ðŸŽ¨ High Quality"],
+        options=["Fast (Recommended)", " High Quality"],
         index=0,
         help="Fast mode reduces animation frames for 5x faster loading. Quality mode uses more frames for smoother animations."
     )
     frames_per_year = 20 if "Fast" in performance_mode else 50
-    st.sidebar.caption(f"Using {frames_per_year} frames/year for racing bars")
     
     # Apply filters with caching
     df_filtered = filter_data_cached(df, tuple(sorted(selected_teams)), tuple(sorted(selected_years)))
@@ -753,8 +752,6 @@ def main():
     
     st.markdown("---")
     
-    # Add performance tip
-    st.info("ðŸ’¡ **Performance Tip:** Each tab loads data on-demand. Switch between tabs to explore different analyses.")
     
     # MAIN TABS
     tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs([
@@ -776,8 +773,7 @@ def main():
                         padding: 20px; border-radius: 12px; border-left: 4px solid #FFD700; margin-bottom: 25px;'>
                 <p style='color: #FFFFFF; font-size: 1.05rem; line-height: 1.6; margin: 0;'>
                     <strong style='color: #FFD700;'> The Decade's Story:</strong> Which teams dominated the 2010s? 
-                    This animated racing bar reveals how franchises accumulated touchdowns season by season, showing 
-                    sustained excellence versus flash-in-the-pan success. Watch dynasties rise and underdogs climb the ranks.
+                    This animated racing bar reveals how franchises accumulated touchdowns season by season. Watch dynasties rise and underdogs climb the ranks.
                 </p>
         </div>
         """, unsafe_allow_html=True)
@@ -1013,7 +1009,7 @@ def main():
         <div style='background: linear-gradient(135deg, rgba(26, 26, 46, 0.8) 0%, rgba(22, 33, 62, 0.8) 100%); 
                     padding: 20px; border-radius: 12px; border-left: 4px solid #4ECDC4; margin-bottom: 25px;'>
             <p style='color: #FFFFFF; font-size: 1.05rem; line-height: 1.6; margin: 0;'>
-                <strong style='color: #4ECDC4;'> The Signal Callers:</strong> Quarterbacks define offenses and franchises. 
+                <strong style='color: #4ECDC4;'> The Offensive captains:</strong> Quarterbacks define offenses and franchises. 
                 From Peyton Manning's precision to Tom Brady's clutch performances, this section chronicles who threw for 
                 the most yards, touchdowns, and efficiency. Watch legends compete and new stars emerge.
             </p>
