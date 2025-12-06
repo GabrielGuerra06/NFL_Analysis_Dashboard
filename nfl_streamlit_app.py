@@ -322,36 +322,41 @@ def load_data():
         except Exception as e:
             st.error(f"Error loading local dataset: {str(e)}")
             st.stop()
-    elif KAGGLEHUB_AVAILABLE:
-        # Download from Kaggle (cloud deployment)
-        try:
-            st.info("📥 Downloading NFL dataset from Kaggle (first run only)...")
-            path = kagglehub.dataset_download("maxhorowitz/nflplaybyplay2009to2016")
-            csv_path = Path(path) / "NFL Play by Play 2009-2018 (v5).csv"
-            df = pd.read_csv(csv_path, low_memory=False)
-        except Exception as e:
-            st.error(f"""
-            ### Dataset Download Failed
-            
-            Could not download dataset from Kaggle: {str(e)}
-            
-            **For local development:**
-            1. Download from: https://www.kaggle.com/datasets/maxhorowitz/nflplaybyplay2009to2016
-            2. Place "NFL Play by Play 2009-2018 (v5).csv" in: `{csv_file.parent}`
-            3. Refresh this page
-            """)
-            st.stop()
     else:
+        # For cloud deployment, use a smaller sample or inform user
         st.error("""
-        ### Dataset Not Available
+        ### 📊 Dataset Required
         
-        Please download the NFL dataset:
+        This dashboard requires the NFL Play-by-Play dataset (667 MB), which is too large for Streamlit Cloud's free tier.
         
-        1. Go to: https://www.kaggle.com/datasets/maxhorowitz/nflplaybyplay2009to2016
-        2. Download **"NFL Play by Play 2009-2018 (v5).csv"**
-        3. Create a `datasets` folder and place the file there
-        4. Refresh this page
+        **To run this dashboard:**
+        
+        1. **Clone the repository:**
+           ```bash
+           git clone https://github.com/GabrielGuerra06/NFL_Analysis_Dashboard.git
+           cd NFL_Analysis_Dashboard
+           ```
+        
+        2. **Download the dataset:**
+           - Visit: https://www.kaggle.com/datasets/maxhorowitz/nflplaybyplay2009to2016
+           - Download "NFL Play by Play 2009-2018 (v5).csv"
+           - Create a `datasets` folder
+           - Place the CSV file inside
+        
+        3. **Install requirements:**
+           ```bash
+           pip install -r requirements.txt
+           ```
+        
+        4. **Run locally:**
+           ```bash
+           streamlit run nfl_streamlit_app.py
+           ```
+        
+        **Note:** Due to file size limitations, this dashboard works best when run locally.
+        You can also check out the code and visualizations on GitHub!
         """)
+        st.info("💡 **Alternative:** Consider using a cloud VM with more resources, or host the dataset on cloud storage (S3, Google Drive) and download it at runtime.")
         st.stop()
     
     try:
