@@ -36,6 +36,9 @@ def create_cloud_dataset():
         # Pass specific
         'pass_attempt', 'complete_pass', 'incomplete_pass', 'air_yards', 'yards_after_catch',
         
+        # Rush specific
+        'rush_attempt',
+        
         # Players
         'passer_player_name', 'rusher_player_name', 'receiver_player_name',
         
