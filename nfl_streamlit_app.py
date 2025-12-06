@@ -2321,28 +2321,29 @@ def main():
     
     # TAB 7: GAME HIGHLIGHTS
     with tab7:
-        st.markdown("##  GAME HIGHLIGHTS - ELITE PERFORMANCES")
-        
-        st.markdown("""
-        <div style='background: linear-gradient(135deg, rgba(26, 26, 46, 0.8) 0%, rgba(22, 33, 62, 0.8) 100%); 
-                    padding: 20px; border-radius: 12px; border-left: 4px solid #FFD700; margin-bottom: 25px;'>
-            <p style='color: #FFFFFF; font-size: 1.05rem; line-height: 1.6; margin: 0;'>
-                <strong style='color: #FFD700;'> Unforgettable Games:</strong> Some performances transcend statistics and become 
-                legendary. This section immortalizes the greatest single-game performances of the decade - games where stars became 
-                legends. Each field map visualizes the story of dominance, showing where magic happened on the gridiron.
-            </p>
-        </div>
-        """, unsafe_allow_html=True)
-        
-        st.caption(" **Legend:** Gold stars mark touchdowns, colors represent play types (blue=rushing, orange=passing). Field position shows where each highlight occurred.")
-        
-        # Custom CSS for highlight cards
-        st.markdown("""
-        <style>
-        .highlight-card {
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-            border: 3px solid #FFD700;
-            border-radius: 15px;
+        with st.spinner('Loading game highlights...'):
+            st.markdown("##  GAME HIGHLIGHTS - ELITE PERFORMANCES")
+            
+            st.markdown("""
+            <div style='background: linear-gradient(135deg, rgba(26, 26, 46, 0.8) 0%, rgba(22, 33, 62, 0.8) 100%); 
+                        padding: 20px; border-radius: 12px; border-left: 4px solid #FFD700; margin-bottom: 25px;'>
+                <p style='color: #FFFFFF; font-size: 1.05rem; line-height: 1.6; margin: 0;'>
+                    <strong style='color: #FFD700;'> Unforgettable Games:</strong> Some performances transcend statistics and become 
+                    legendary. This section immortalizes the greatest single-game performances of the decade - games where stars became 
+                    legends. Each field map visualizes the story of dominance, showing where magic happened on the gridiron.
+                </p>
+            </div>
+            """, unsafe_allow_html=True)
+            
+            st.caption(" **Legend:** Gold stars mark touchdowns, colors represent play types (blue=rushing, orange=passing). Field position shows where each highlight occurred.")
+            
+            # Custom CSS for highlight cards
+            st.markdown("""
+            <style>
+            .highlight-card {
+                background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+                border: 3px solid #FFD700;
+                border-radius: 15px;
             padding: 20px;
             margin: 15px 0;
             box-shadow: 0 8px 16px rgba(255, 215, 0, 0.3);
