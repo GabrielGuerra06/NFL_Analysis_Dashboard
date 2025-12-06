@@ -310,7 +310,7 @@ NFL_LOCATIONS = {
 def load_data():
     """Load NFL play-by-play data - tries optimized parquet first, then CSV"""
     
-    # Try optimized parquet file first (for cloud deployment - 10MB)
+    # Try optimized parquet file first (for cloud deployment - 12MB, 43 columns)
     parquet_file = SCRIPT_DIR / "datasets" / "nfl_data_cloud.parquet"
     # Fallback to full CSV (for local development - 667MB)
     csv_file = SCRIPT_DIR / "datasets" / "NFL Play by Play 2009-2018 (v5).csv"

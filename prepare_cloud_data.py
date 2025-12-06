@@ -18,10 +18,10 @@ def create_cloud_dataset():
     # Strategy: Keep all games but optimize data types and columns
     # Remove columns that aren't used in visualizations
     
-    # Essential columns for the dashboard (comprehensive list)
+    # Essential columns for the dashboard (comprehensive list - updated v2)
     essential_columns = [
         # Game identifiers
-        'game_id', 'play_id', 'game_date', 'posteam', 'defteam', 'home_team', 'away_team',
+        'game_id', 'play_id', 'game_date', 'qtr', 'posteam', 'defteam', 'home_team', 'away_team',
         
         # Play details
         'yards_gained', 'play_type', 'down', 'ydstogo', 'yardline_100',
