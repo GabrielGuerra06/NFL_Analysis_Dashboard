@@ -18,7 +18,7 @@ def create_cloud_dataset():
     # Strategy: Keep all games but optimize data types and columns
     # Remove columns that aren't used in visualizations
     
-    # Essential columns for the dashboard (comprehensive list - updated v2)
+    # Essential columns for the dashboard (comprehensive list - updated v3)
     essential_columns = [
         # Game identifiers
         'game_id', 'play_id', 'game_date', 'qtr', 'posteam', 'defteam', 'home_team', 'away_team',
@@ -40,8 +40,13 @@ def create_cloud_dataset():
         # Rush specific
         'rush_attempt',
         
-        # Players
+        # Offensive players
         'passer_player_name', 'rusher_player_name', 'receiver_player_name',
+        
+        # Defensive players
+        'interception_player_name', 
+        'solo_tackle_1_player_name', 'solo_tackle_2_player_name',
+        'assist_tackle_1_player_name', 'assist_tackle_2_player_name',
         
         # Advanced metrics
         'epa', 'wpa', 'wp',
