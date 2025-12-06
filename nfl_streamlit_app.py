@@ -79,6 +79,16 @@ if not csv_file.exists():
     st.stop()
 
 else:
-    # Dataset exists - redirect to full app
-    st.info("Dataset found! Please use `nfl_streamlit_app.py` for the full dashboard with all visualizations.")
-    st.stop()
+    # Dataset exists - load full dashboard module
+    st.info("✅ Dataset found! Loading full dashboard...")
+    
+    # Import and run the full dashboard
+    try:
+        import importlib.util
+        spec = importlib.util.spec_from_file_location("full_app", SCRIPT_DIR / "nfl_streamlit_app_full.py")
+        full_app = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(full_app)
+    except Exception as e:
+        st.error(f"Error loading full dashboard: {str(e)}")
+        st.info("Try running `streamlit run nfl_streamlit_app_full.py` directly instead.")
+        st.stop()
