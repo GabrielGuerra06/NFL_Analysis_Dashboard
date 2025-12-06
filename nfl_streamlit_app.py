@@ -79,16 +79,28 @@ if not csv_file.exists():
     st.stop()
 
 else:
-    # Dataset exists - load full dashboard module
-    st.info("✅ Dataset found! Loading full dashboard...")
+    # Dataset exists - show instructions for local use
+    st.success("✅ Dataset found! This file is for Streamlit Cloud deployment.")
+    st.markdown("---")
     
-    # Import and run the full dashboard
-    try:
-        import importlib.util
-        spec = importlib.util.spec_from_file_location("full_app", SCRIPT_DIR / "nfl_streamlit_app_full.py")
-        full_app = importlib.util.module_from_spec(spec)
-        spec.loader.exec_module(full_app)
-    except Exception as e:
-        st.error(f"Error loading full dashboard: {str(e)}")
-        st.info("Try running `streamlit run nfl_streamlit_app_full.py` directly instead.")
-        st.stop()
+    st.markdown("""
+    ### 🚀 To run the full dashboard locally:
+    
+    **Run this command:**
+    ```bash
+    streamlit run nfl_streamlit_app_full.py
+    ```
+    
+    The full dashboard (`nfl_streamlit_app_full.py`) includes:
+    - 🏈 Team Performance Analysis with racing bars
+    - 🎯 Quarterback Statistics
+    - 🏃 Running Back Metrics
+    - 🙌 Wide Receiver Analysis
+    - 🛡️ Defensive Comparisons
+    - 🗺️ Geographic Team Distribution
+    - 📊 Advanced Seaborn Visualizations
+    
+    **Note:** This file (`nfl_streamlit_app.py`) is intentionally minimal for Streamlit Cloud deployment 
+    where the dataset is not available.
+    """)
+    st.stop()
