@@ -426,19 +426,6 @@ def main():
             pass
     st.markdown("</div>", unsafe_allow_html=True)
     
-    # Performance Mode Toggle (in sidebar for easy access)
-    with st.sidebar:
-        st.markdown("---")
-        st.subheader("⚙️ Performance Settings")
-        performance_mode = st.radio(
-            "Rendering Speed",
-            options=["⚡ Fast (Recommended)", "🎨 High Quality"],
-            index=0,
-            help="Fast mode reduces animation frames for 5x faster loading. Quality mode uses more frames for smoother animations."
-        )
-        frames_per_year = 20 if "Fast" in performance_mode else 50
-        st.caption(f"Using {frames_per_year} frames/year")
-    
     # Load data with enhanced spinner
     with st.spinner(' Loading NFL Play-by-Play Dataset...'):
         df = load_data()
@@ -569,6 +556,18 @@ def main():
         )
         if team_search:
             st.sidebar.error(f" '{team_search}' not found")
+    
+    # Performance Mode Toggle
+    st.sidebar.markdown("---")
+    st.sidebar.markdown("###  Performance Settings")
+    performance_mode = st.sidebar.radio(
+        "Rendering Speed",
+        options=["⚡ Fast (Recommended)", "🎨 High Quality"],
+        index=0,
+        help="Fast mode reduces animation frames for 5x faster loading. Quality mode uses more frames for smoother animations."
+    )
+    frames_per_year = 20 if "Fast" in performance_mode else 50
+    st.sidebar.caption(f"Using {frames_per_year} frames/year for racing bars")
     
     # Apply filters with caching
     df_filtered = filter_data_cached(df, tuple(sorted(selected_teams)), tuple(sorted(selected_years)))
