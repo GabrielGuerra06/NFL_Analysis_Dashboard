@@ -5,6 +5,8 @@ import numpy as np
 import plotly.graph_objects as go
 import plotly.express as px
 from plotly.subplots import make_subplots
+import matplotlib
+matplotlib.use('Agg')  # Set backend before importing pyplot
 import matplotlib.pyplot as plt
 import seaborn as sns
 import geopandas as gpd
@@ -2762,4 +2764,26 @@ def main():
     
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except Exception as e:
+        st.error(f"""
+        ### ❌ Application Error
+        
+        An error occurred while running the dashboard: 
+        
+        ```
+        {str(e)}
+        ```
+        
+        **This is likely because:**
+        - The dataset file is missing (required for cloud deployment)
+        - See instructions above for local setup
+        
+        For local development, make sure you have:
+        1. Downloaded the NFL dataset
+        2. Placed it in the `datasets/` folder
+        3. All dependencies installed from requirements.txt
+        """)
+        import traceback
+        st.code(traceback.format_exc())
