@@ -18,15 +18,35 @@ def create_cloud_dataset():
     # Strategy: Keep all games but optimize data types and columns
     # Remove columns that aren't used in visualizations
     
-    # Essential columns for the dashboard
+    # Essential columns for the dashboard (comprehensive list)
     essential_columns = [
+        # Game identifiers
         'game_id', 'play_id', 'game_date', 'posteam', 'defteam', 'home_team', 'away_team',
-        'yards_gained', 'play_type', 'touchdown', 'pass_touchdown', 'rush_touchdown',
-        'interception', 'fumble', 'sack', 'safety', 'field_goal_result',
-        'extra_point_result', 'two_point_conv_result', 'passer_player_name',
-        'rusher_player_name', 'receiver_player_name', 'epa', 'wpa', 'wp',
-        'down', 'ydstogo', 'yardline_100', 'quarter_seconds_remaining',
-        'half_seconds_remaining', 'game_seconds_remaining', 'score_differential'
+        
+        # Play details
+        'yards_gained', 'play_type', 'down', 'ydstogo', 'yardline_100',
+        
+        # Scoring
+        'touchdown', 'pass_touchdown', 'rush_touchdown',
+        'field_goal_result', 'extra_point_result', 'two_point_conv_result',
+        
+        # Turnovers and defense
+        'interception', 'fumble', 'sack', 'safety',
+        
+        # Pass specific
+        'pass_attempt', 'complete_pass', 'incomplete_pass', 'air_yards', 'yards_after_catch',
+        
+        # Players
+        'passer_player_name', 'rusher_player_name', 'receiver_player_name',
+        
+        # Advanced metrics
+        'epa', 'wpa', 'wp',
+        
+        # Time
+        'quarter_seconds_remaining', 'half_seconds_remaining', 'game_seconds_remaining',
+        
+        # Score
+        'score_differential'
     ]
     
     # Keep only essential columns that exist
