@@ -9,7 +9,6 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import geopandas as gpd
 from shapely.geometry import Point
-import kagglehub
 from datetime import datetime
 import warnings
 import os
@@ -304,18 +303,37 @@ NFL_LOCATIONS = {
 # Load Data with Caching
 @st.cache_data(show_spinner=False)
 def load_data():
-    """Load NFL play-by-play data from 2009-2018"""
-    path = kagglehub.dataset_download("maxhorowitz/nflplaybyplay2009to2016")
-    df = pd.read_csv(path + "/NFL Play by Play 2009-2018 (v5).csv", low_memory=False)
-    df['game_date'] = pd.to_datetime(df['game_date'])
-    df['year'] = df['game_date'].dt.year
-    df = df[(df['year'] >= 2009) & (df['year'] <= 2018)].copy()
+    """Load NFL play-by-play data from 2009-2018 from local file"""
+    csv_file = SCRIPT_DIR / "datasets" / "NFL Play by Play 2009-2018 (v5).csv"
     
-    # Consolidate SD (San Diego) and LAC (LA Chargers) into LAC
-    df['posteam'] = df['posteam'].replace('SD', 'LAC')
-    df['defteam'] = df['defteam'].replace('SD', 'LAC')
+    if not csv_file.exists():
+        st.error("""
+        ### Dataset Not Found
+        
+        Please download the NFL dataset:
+        
+        1. Go to: https://www.kaggle.com/datasets/maxhorowitz/nflplaybyplay2009to2016
+        2. Download **"NFL Play by Play 2009-2018 (v5).csv"**
+        3. Place it in the same directory as this app:
+           `{}`
+        4. Refresh this page
+        """.format(csv_file.parent))
+        st.stop()
     
-    return df
+    try:
+        df = pd.read_csv(csv_file, low_memory=False)
+        df['game_date'] = pd.to_datetime(df['game_date'])
+        df['year'] = df['game_date'].dt.year
+        df = df[(df['year'] >= 2009) & (df['year'] <= 2018)].copy()
+        
+        # Consolidate SD (San Diego) and LAC (LA Chargers) into LAC
+        df['posteam'] = df['posteam'].replace('SD', 'LAC')
+        df['defteam'] = df['defteam'].replace('SD', 'LAC')
+        
+        return df
+    except Exception as e:
+        st.error(f"Error loading dataset: {str(e)}")
+        st.stop()
 
 def main():
     # Enhanced Header with NFL Logo and Subtitle
