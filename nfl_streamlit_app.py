@@ -304,54 +304,10 @@ NFL_LOCATIONS = {
 @st.cache_data(show_spinner=False)
 def load_data():
     """Load NFL play-by-play data from 2009-2018"""
-    # Try local file first (for development)
     csv_file = SCRIPT_DIR / "datasets" / "NFL Play by Play 2009-2018 (v5).csv"
     
-    if csv_file.exists():
-        # Load from local file (development)
-        try:
-            df = pd.read_csv(csv_file, low_memory=False)
-        except Exception as e:
-            st.error(f"Error loading local dataset: {str(e)}")
-            st.stop()
-    else:
-        # For cloud deployment, use a smaller sample or inform user
-        st.error("""
-        ### 📊 Dataset Required
-        
-        This dashboard requires the NFL Play-by-Play dataset (667 MB), which is too large for Streamlit Cloud's free tier.
-        
-        **To run this dashboard:**
-        
-        1. **Clone the repository:**
-           ```bash
-           git clone https://github.com/GabrielGuerra06/NFL_Analysis_Dashboard.git
-           cd NFL_Analysis_Dashboard
-           ```
-        
-        2. **Download the dataset:**
-           - Visit: https://www.kaggle.com/datasets/maxhorowitz/nflplaybyplay2009to2016
-           - Download "NFL Play by Play 2009-2018 (v5).csv"
-           - Create a `datasets` folder
-           - Place the CSV file inside
-        
-        3. **Install requirements:**
-           ```bash
-           pip install -r requirements.txt
-           ```
-        
-        4. **Run locally:**
-           ```bash
-           streamlit run nfl_streamlit_app.py
-           ```
-        
-        **Note:** Due to file size limitations, this dashboard works best when run locally.
-        You can also check out the code and visualizations on GitHub!
-        """)
-        st.info("💡 **Alternative:** Consider using a cloud VM with more resources, or host the dataset on cloud storage (S3, Google Drive) and download it at runtime.")
-        st.stop()
-    
     try:
+        df = pd.read_csv(csv_file, low_memory=False)
         df['game_date'] = pd.to_datetime(df['game_date'])
         df['year'] = df['game_date'].dt.year
         df = df[(df['year'] >= 2009) & (df['year'] <= 2018)].copy()
@@ -362,11 +318,67 @@ def load_data():
         
         return df
     except Exception as e:
-        st.error(f"Error processing dataset: {str(e)}")
-        st.stop()
+        st.error(f"Error loading dataset: {str(e)}")
         st.stop()
 
 def main():
+    # Check if dataset exists before showing main UI
+    csv_file = SCRIPT_DIR / "datasets" / "NFL Play by Play 2009-2018 (v5).csv"
+    
+    if not csv_file.exists():
+        # Show error page with clear instructions
+        st.markdown("<h1 style='text-align: center; color: #FFD700;'>🏈 NFL DECADE ANALYTICS DASHBOARD</h1>", unsafe_allow_html=True)
+        st.markdown("---")
+        st.error("""
+        ### 📊 Dataset Required
+        
+        This dashboard requires the NFL Play-by-Play dataset (667 MB), which is too large for Streamlit Cloud's free tier.
+        """)
+        
+        st.markdown("""
+        ### 🚀 To run this dashboard locally:
+        
+        **1. Clone the repository:**
+        ```bash
+        git clone https://github.com/GabrielGuerra06/NFL_Analysis_Dashboard.git
+        cd NFL_Analysis_Dashboard
+        ```
+        
+        **2. Download the dataset:**
+        - Visit: [Kaggle NFL Dataset](https://www.kaggle.com/datasets/maxhorowitz/nflplaybyplay2009to2016)
+        - Download **"NFL Play by Play 2009-2018 (v5).csv"**
+        - Create a `datasets` folder in the project directory
+        - Place the CSV file inside the `datasets` folder
+        
+        **3. Install requirements:**
+        ```bash
+        pip install -r requirements.txt
+        ```
+        
+        **4. Run the dashboard:**
+        ```bash
+        streamlit run nfl_streamlit_app.py
+        ```
+        """)
+        
+        st.info("💡 **Alternative:** You can deploy this on a cloud VM with more resources, or host the dataset on cloud storage (AWS S3, Google Drive) and modify the code to download it at runtime.")
+        
+        st.markdown("---")
+        st.markdown("""
+        ### 📖 About This Dashboard
+        
+        This comprehensive NFL analytics dashboard provides:
+        - **Team Performance Analysis** with racing bar visualizations
+        - **Quarterback Statistics** across a decade
+        - **Running Back & Wide Receiver Metrics**
+        - **Defensive Analysis** and comparisons
+        - **Geographic Team Distribution** with interactive maps
+        - **Seaborn Statistical Visualizations**
+        
+        Check out the [GitHub Repository](https://github.com/GabrielGuerra06/NFL_Analysis_Dashboard) to explore the code!
+        """)
+        st.stop()
+    
     # Enhanced Header with NFL Logo and Subtitle
     st.markdown("<div style='text-align: center; margin-bottom: 10px;'>", unsafe_allow_html=True)
     col_logo1, col_title, col_logo2 = st.columns([1, 4, 1])
