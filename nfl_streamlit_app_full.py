@@ -308,90 +308,44 @@ NFL_LOCATIONS = {
 # Load Data with Caching
 @st.cache_data(show_spinner=False)
 def load_data():
-    """Load NFL play-by-play data from 2009-2018"""
+    """Load NFL play-by-play data - tries optimized parquet first, then CSV"""
+    
+    # Try optimized parquet file first (for cloud deployment - 10MB)
+    parquet_file = SCRIPT_DIR / "datasets" / "nfl_data_cloud.parquet"
+    # Fallback to full CSV (for local development - 667MB)
     csv_file = SCRIPT_DIR / "datasets" / "NFL Play by Play 2009-2018 (v5).csv"
     
-    # Double-check file exists (should have been checked in main, but just in case)
-    if not csv_file.exists():
-        st.error("Dataset file not found. This should not happen - please report this error.")
-        st.stop()
-        return None
-    
     try:
-        df = pd.read_csv(csv_file, low_memory=False)
-        df['game_date'] = pd.to_datetime(df['game_date'])
-        df['year'] = df['game_date'].dt.year
-        df = df[(df['year'] >= 2009) & (df['year'] <= 2018)].copy()
-        
-        # Consolidate SD (San Diego) and LAC (LA Chargers) into LAC
-        df['posteam'] = df['posteam'].replace('SD', 'LAC')
-        df['defteam'] = df['defteam'].replace('SD', 'LAC')
-        
-        return df
+        if parquet_file.exists():
+            # Load optimized parquet (already processed and filtered)
+            df = pd.read_parquet(parquet_file)
+            return df
+        elif csv_file.exists():
+            # Load full CSV and process
+            df = pd.read_csv(csv_file, low_memory=False)
+            df['game_date'] = pd.to_datetime(df['game_date'])
+            df['year'] = df['game_date'].dt.year
+            df = df[(df['year'] >= 2009) & (df['year'] <= 2018)].copy()
+            
+            # Consolidate SD (San Diego) and LAC (LA Chargers) into LAC
+            df['posteam'] = df['posteam'].replace('SD', 'LAC')
+            df['defteam'] = df['defteam'].replace('SD', 'LAC')
+            
+            return df
+        else:
+            st.error("Dataset file not found. Please ensure either nfl_data_cloud.parquet or the full CSV exists in the datasets folder.")
+            st.stop()
+            return None
+            
     except Exception as e:
         st.error(f"Error loading dataset: {str(e)}")
+        import traceback
+        st.code(traceback.format_exc())
         st.stop()
         return None
 
 def main():
-    # Check if dataset exists before showing main UI
-    csv_file = SCRIPT_DIR / "datasets" / "NFL Play by Play 2009-2018 (v5).csv"
-    
-    if not csv_file.exists():
-        # Show error page with clear instructions (no logos needed)
-        st.markdown("<h1 style='text-align: center; color: #FFD700;'>🏈 NFL DECADE ANALYTICS DASHBOARD</h1>", unsafe_allow_html=True)
-        st.markdown("---")
-        st.error("""
-        ### 📊 Dataset Required
-        
-        This dashboard requires the NFL Play-by-Play dataset (667 MB), which is too large for Streamlit Cloud's free tier.
-        """)
-        
-        st.markdown("""
-        ### 🚀 To run this dashboard locally:
-        
-        **1. Clone the repository:**
-        ```bash
-        git clone https://github.com/GabrielGuerra06/NFL_Analysis_Dashboard.git
-        cd NFL_Analysis_Dashboard
-        ```
-        
-        **2. Download the dataset:**
-        - Visit: [Kaggle NFL Dataset](https://www.kaggle.com/datasets/maxhorowitz/nflplaybyplay2009to2016)
-        - Download **"NFL Play by Play 2009-2018 (v5).csv"**
-        - Create a `datasets` folder in the project directory
-        - Place the CSV file inside the `datasets` folder
-        
-        **3. Install requirements:**
-        ```bash
-        pip install -r requirements.txt
-        ```
-        
-        **4. Run the dashboard:**
-        ```bash
-        streamlit run nfl_streamlit_app.py
-        ```
-        """)
-        
-        st.info("💡 **Alternative:** You can deploy this on a cloud VM with more resources, or host the dataset on cloud storage (AWS S3, Google Drive) and modify the code to download it at runtime.")
-        
-        st.markdown("---")
-        st.markdown("""
-        ### 📖 About This Dashboard
-        
-        This comprehensive NFL analytics dashboard provides:
-        - **Team Performance Analysis** with racing bar visualizations
-        - **Quarterback Statistics** across a decade
-        - **Running Back & Wide Receiver Metrics**
-        - **Defensive Analysis** and comparisons
-        - **Geographic Team Distribution** with interactive maps
-        - **Seaborn Statistical Visualizations**
-        
-        Check out the [GitHub Repository](https://github.com/GabrielGuerra06/NFL_Analysis_Dashboard) to explore the code!
-        """)
-        return  # Exit early without loading rest of UI
-    
-    # Enhanced Header with NFL Logo and Subtitle (only loads if dataset exists)
+    # Enhanced Header with NFL Logo and Subtitle
     st.markdown("<div style='text-align: center; margin-bottom: 10px;'>", unsafe_allow_html=True)
     col_logo1, col_title, col_logo2 = st.columns([1, 4, 1])
     with col_logo1:
