@@ -1,4 +1,4 @@
-﻿
+
 import streamlit as st
 import pandas as pd
 import numpy as np
@@ -430,34 +430,56 @@ def main():
     with st.spinner(' Loading NFL Play-by-Play Dataset...'):
         df = load_data()
     
-    # About Section
-    st.markdown("## About This Dashboard")
+    # Enhanced Introduction Section
+    st.markdown("##  ABOUT THIS DASHBOARD")
     
     intro_col1, intro_col2 = st.columns([2, 1])
     with intro_col1:
-        st.write("""
-        **American Football** is one of the most popular sports in the United States. This dashboard analyzes 
-        a complete decade of NFL action (2009-2018), providing insights into team and player performance.
-        
-        The NFL features two teams competing to advance the ball into the opposing team's end zone. Teams have 
-        specialized positions including Quarterbacks, Wide Receivers, and Running Backs. Each season consists 
-        of 17 regular games, with top teams advancing to the playoffs.
-        """)
+        st.markdown("""
+        <div style='background: linear-gradient(135deg, rgba(26, 26, 46, 0.9) 0%, rgba(22, 33, 62, 0.9) 100%); 
+                    padding: 25px; border-radius: 15px; border-left: 5px solid #FFD700; 
+                    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4); margin-bottom: 20px;'>
+            <p style='color: #FFFFFF; font-size: 1.1rem; line-height: 1.8; font-family: Roboto;'>
+                <strong style='color: #FFD700;'>American Football</strong> is one of the most popular sports in the United States. 
+                The <strong style='color: #00D9FF;'>NFL (National Football League)</strong> captures extensive data on virtually 
+                every play in each game. This dashboard analyzes <strong style='color: #FFD700;'>a complete decade</strong> 
+                of NFL action, providing deep insights into team and player performance.
+            </p>
+            <p style='color: #FFFFFF; font-size: 1.1rem; line-height: 1.8; font-family: Roboto; margin-top: 15px;'>
+                The game features two teams competing to score by advancing the ball into the opposing team's end zone. 
+                Teams are divided into <strong style='color: #00D9FF;'>offense and defense</strong>, with specialized 
+                positions including Quarterbacks, Wide Receivers, and Running Backs. Each season consists of 17 regular 
+                games, with the top teams advancing to the playoffs.
+            </p>
+        </div>
+        """, unsafe_allow_html=True)
     
     with intro_col2:
-        st.info("""
-        **Scoring System**
-        - Touchdown: 6 points + 1 extra = 7 pts
-        - Field Goal: 3 points
-        - Safety: 2 points
-        - Game Duration: 4 quarters × 15 min
-        """)
+        st.markdown("""
+        <div style='background: linear-gradient(135deg, rgba(255, 215, 0, 0.1) 0%, rgba(255, 165, 0, 0.1) 100%); 
+                    padding: 25px; border-radius: 15px; border: 2px solid #FFD700; 
+                    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4); margin-bottom: 20px;'>
+            <h3 style='color: #FFD700; text-align: center; margin-bottom: 20px; font-size: 1.5rem;'> SCORING SYSTEM</h3>
+            <ul style='color: #FFFFFF; font-size: 1.05rem; line-height: 2; list-style: none; padding: 0;'>
+                <li> <strong style='color: #FFD700;'>Touchdown:</strong> 6 points + 1 extra = <strong>7 pts</strong></li>
+                <li> <strong style='color: #00D9FF;'>Field Goal:</strong> <strong>3 points</strong></li>
+                <li> <strong style='color: #FF6B6B;'>Safety:</strong> <strong>2 points</strong></li>
+                <li> <strong style='color: #9D4EDD;'>Game:</strong> 4 quarters  15 min</li>
+            </ul>
+        </div>
+        """, unsafe_allow_html=True)
     
-    st.info("""
-    **What You'll Find Here:** Explore team performance trends, analyze elite player statistics, 
-    examine defensive plays, and discover how the NFL evolved throughout the decade. Use the sidebar 
-    filters to focus on your favorite teams and compare performances across seasons.
-    """)
+    st.markdown("""
+    <div style='background: linear-gradient(135deg, rgba(0, 217, 255, 0.1) 0%, rgba(0, 217, 255, 0.05) 100%); 
+                padding: 20px; border-radius: 12px; border-left: 5px solid #00D9FF; margin: 20px 0;'>
+        <p style='color: #FFFFFF; font-size: 1.1rem; line-height: 1.8; font-family: Roboto; margin: 0;'>
+            <strong style='color: #00D9FF;'> Dashboard Objectives:</strong> Explore team performance trends, 
+            analyze elite player statistics (QBs, RBs, WRs), examine defensive dominance, and discover how 
+            the NFL evolved throughout the decade. <strong style='color: #FFD700;'>Interactive filters</strong> 
+            allow you to focus on your favorite teams and compare player performances across seasons.
+        </p>
+    </div>
+    """, unsafe_allow_html=True)
 
     # Team logo mapping (simplified names matching file names)
     team_logo_map = {
@@ -491,11 +513,16 @@ def main():
     
     st.markdown("---")
 
-    # Sidebar Filters
-    st.sidebar.markdown("## Filters")
+    # Enhanced Sidebar Filters
+    st.sidebar.markdown("""
+    <div style='text-align: center; padding: 20px; background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%); 
+                border-radius: 15px; margin-bottom: 20px;'>
+        <h2 style='color: #000; margin: 0; font-size: 1.8rem; font-family: Bebas Neue;'>FILTERS</h2>
+    </div>
+    """, unsafe_allow_html=True)
     
     # Team Quick Search
-    st.sidebar.markdown("### Quick Team Search")
+    st.sidebar.markdown("###  Quick Team Search")
     team_search = st.sidebar.text_input(
         "Team Code",
         value="",
@@ -528,61 +555,84 @@ def main():
             help="Select one or multiple teams"
         )
         if team_search:
-            st.sidebar.error(f"'{team_search}' not found")
+            st.sidebar.error(f" '{team_search}' not found")
     
     # Performance Mode Toggle
     st.sidebar.markdown("---")
-    st.sidebar.markdown("### Performance Settings")
+    st.sidebar.markdown("###  Performance Settings")
     performance_mode = st.sidebar.radio(
         "Rendering Speed",
-        options=["Fast (Recommended)", "High Quality"],
+        options=["âš¡ Fast (Recommended)", "ðŸŽ¨ High Quality"],
         index=0,
         help="Fast mode reduces animation frames for 5x faster loading. Quality mode uses more frames for smoother animations."
     )
     frames_per_year = 20 if "Fast" in performance_mode else 50
-
+    st.sidebar.caption(f"Using {frames_per_year} frames/year for racing bars")
     
     # Apply filters with caching
     df_filtered = filter_data_cached(df, tuple(sorted(selected_teams)), tuple(sorted(selected_years)))
     
-    # Key Metrics
-    st.markdown("## Key Performance Indicators")
-    st.info("""
-    **Quick Overview:** These numbers summarize your filtered data. Total plays show game volume, 
-    yards measure offensive output, and touchdowns reveal scoring prowess.
-    """)
+    # Enhanced Global KPIs Section
+    st.markdown("##  KEY PERFORMANCE INDICATORS")
+    st.markdown("""
+    <div style='background: rgba(255, 215, 0, 0.1); padding: 15px; border-radius: 10px; border-left: 3px solid #FFD700; margin-bottom: 20px;'>
+        <p style='color: #FFFFFF; font-size: 0.95rem; line-height: 1.5; margin: 0;'>
+            <strong style='color: #FFD700;'> At-A-Glance Metrics:</strong> These key numbers summarize the filtered dataset's scope and intensity. 
+            Total plays show game volume, yards measure offensive output, touchdowns reveal scoring prowess, and EPA quantifies strategic value. Use filters to explore specific teams or time periods.
+        </p>
+    </div>
+    """, unsafe_allow_html=True)
     
     kpi1, kpi2, kpi3 = st.columns(3)
     kpi4, kpi5, kpi6 = st.columns(3)
     
     with kpi1:
-        st.metric("Total Plays", f"{len(df_filtered):,}")
+        st.metric(" Total Plays", f"{len(df_filtered):,}", 
+                 help="Total number of offensive plays executed")
     with kpi2:
-        st.metric("Games Played", f"{df_filtered['game_id'].nunique():,}")
+        st.metric(" Games Played", f"{df_filtered['game_id'].nunique():,}",
+                 help="Total regular season games")
     with kpi3:
-        st.metric("Touchdowns", f"{int(df_filtered['touchdown'].sum()):,}")
+        st.metric(" Touchdowns", f"{int(df_filtered['touchdown'].sum()):,}",
+                 help="Total touchdowns scored")
     with kpi4:
-        st.metric("Total Yards", f"{int(df_filtered['yards_gained'].sum()):,}")
+        st.metric(" Total Yards", f"{int(df_filtered['yards_gained'].sum()):,}",
+                 help="Cumulative yards gained")
     with kpi5:
-        st.metric("Teams", f"{df_filtered['posteam'].nunique()}")
+        st.metric(" Teams", f"{df_filtered['posteam'].nunique()}",
+                 help="Number of teams in analysis")
     with kpi6:
-        st.metric("Seasons", f"{df_filtered['year'].nunique()}")
+        st.metric(" Seasons", f"{df_filtered['year'].nunique()}",
+                 help="Years covered in dataset")
     
-    # Dataset Context
-    st.write(f"""
-    This dataset contains **{len(df):,} plays** across **{df['game_id'].nunique():,} regular season games** 
-    spanning 2009-2018. With an average of **4.9 touchdowns per game** and over **1.68 million total yards**, 
-    this data reveals the explosive offensive nature of modern NFL football.
-    """)
+    # Enhanced Data Insights
+    st.markdown("""
+    <div style='background: linear-gradient(135deg, rgba(26, 26, 46, 0.9) 0%, rgba(22, 33, 62, 0.9) 100%); 
+                padding: 25px; border-radius: 15px; border-left: 5px solid #00D9FF; 
+                box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4); margin: 25px 0;'>
+        <h4 style='color: #FFD700; margin-top: 0;'> Dataset Insights</h4>
+        <p style='color: #FFFFFF; font-size: 1.05rem; line-height: 1.8; font-family: Roboto;'>
+            This comprehensive dataset contains <strong style='color: #FFD700;'>417,172 plays</strong> across 
+            <strong style='color: #00D9FF;'>2,524 regular season games</strong> spanning a complete decade (2009-2018). 
+            With an average of <strong style='color: #FFD700;'>~4.9 touchdowns per game</strong> and over 
+            <strong style='color: #00D9FF;'>1.68 million total yards</strong>, this data reveals the explosive 
+            offensive nature of modern NFL football.
+        </p>
+        <p style='color: #FFFFFF; font-size: 1.05rem; line-height: 1.8; font-family: Roboto; margin-top: 15px;'>
+            Each season features 17 weeks with approximately 15 games per week, showcasing the performances of 32 teams 
+            competing for playoff positions and ultimately, the Super Bowl championship.
+        </p>
+    </div>
+    """, unsafe_allow_html=True)
 
-    st.warning("**Data Note:** This dataset focuses on offensive statistics. Defensive and special teams touchdowns may differ from official NFL statistics.")
+    st.warning(" **Data Note:** This dataset focuses on offensive statistics. Defensive and special teams touchdowns are not included in the touchdown counts, which may result in slight differences from official NFL statistics.")
     st.markdown("---")
     
-    # Geographic Map Section
-    st.markdown("## NFL Teams Geographic Distribution")
-    st.write("**Interactive map showing team locations and performance across the United States**")
-    
-    st.info("**How to Use:** Hover over markers to see detailed stats. Larger markers = more touchdowns scored.")
+    # ENHANCED GEOGRAPHIC MAP SECTION
+    st.markdown("##  NFL TEAMS GEOGRAPHIC DISTRIBUTION")
+    st.markdown("<p style='color: #00D9FF; font-size: 1.15rem; margin-bottom: 20px;'>Interactive map showing team locations and performance metrics across the United States</p>", unsafe_allow_html=True)
+
+    st.info(" **Map Features:** Hover over markers to see detailed team statistics. Marker size reflects touchdown performance. Team locations are based on stadium coordinates.")
     
 
     
@@ -703,6 +753,8 @@ def main():
     
     st.markdown("---")
     
+    # Add performance tip
+    st.info("ðŸ’¡ **Performance Tip:** Each tab loads data on-demand. Switch between tabs to explore different analyses.")
     
     # MAIN TABS
     tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs([
@@ -717,17 +769,22 @@ def main():
     # TAB 1: TEAM PERFORMANCE WITH RACING BAR
     with tab1:
         with st.spinner('Loading team performance data...'):
-            st.markdown("## Team Performance Analysis")
+            st.markdown("##  TEAM PERFORMANCE ANALYSIS")
             
-            st.write("""
-            **The Decade's Story:** Which teams dominated the 2010s? This animated racing bar shows how franchises 
-            accumulated touchdowns season by season. Watch as some teams maintain excellence while others have their 
-            moment in the sun.
-            """)
+            st.markdown("""
+            <div style='background: linear-gradient(135deg, rgba(26, 26, 46, 0.8) 0%, rgba(22, 33, 62, 0.8) 100%); 
+                        padding: 20px; border-radius: 12px; border-left: 4px solid #FFD700; margin-bottom: 25px;'>
+                <p style='color: #FFFFFF; font-size: 1.05rem; line-height: 1.6; margin: 0;'>
+                    <strong style='color: #FFD700;'> The Decade's Story:</strong> Which teams dominated the 2010s? 
+                    This animated racing bar reveals how franchises accumulated touchdowns season by season, showing 
+                    sustained excellence versus flash-in-the-pan success. Watch dynasties rise and underdogs climb the ranks.
+                </p>
+        </div>
+        """, unsafe_allow_html=True)
         
-        # Racing Bar Chart
-        st.markdown("### Racing Bar: Team Performance Evolution (2009-2018)")
-        st.caption("Press Play to see teams compete for touchdown supremacy. Longer bars = more offensive touchdowns.")
+        # RACING BAR CHART - Most Winning Teams
+        st.markdown("###  Racing Bar: Team Performance Evolution (2009-2018)")
+        st.caption(" Press Play to see teams compete for touchdown supremacy across 10 seasons. Larger bars = more offensive firepower.")
         
         # Use cached racing bar data (5x faster than before)
         with st.spinner('Generating racing bar animation...'):
@@ -890,7 +947,7 @@ def main():
             plt.close()
         
         with col2:
-            st.caption("**EPA:** Advanced metric measuring play efficiency. Positive = better than expected.")
+            st.caption(" **EPA (Expected Points Added):** Advanced metric measuring play efficiency. Positive EPA = offense gained more points than expected.")
             # EPA by Team
             team_epa = df_filtered.groupby('posteam')['epa'].mean().nlargest(15)
             fig_epa = go.Figure()
@@ -918,7 +975,7 @@ def main():
         
         # Yards Evolution Over Time
         st.markdown("###  Yards Evolution by Year")
-        st.caption("**Decade Trajectories:** Watch how top teams' offensive output changed year-by-year.")
+        st.caption(" **Decade Trajectories:** Follow how top teams' total offensive output changed year-by-year. Upward trends show program improvement, while sharp drops reveal injury impacts or roster changes.")
         yearly_yards = df_filtered.groupby(['year', 'posteam'])['yards_gained'].sum().reset_index()
         top_teams = df_filtered.groupby('posteam')['yards_gained'].sum().nlargest(10).index
         yearly_yards_top = yearly_yards[yearly_yards['posteam'].isin(top_teams)]
@@ -950,19 +1007,24 @@ def main():
     
     # TAB 2: QUARTERBACK STATS WITH RACING BAR
     with tab2:
-        st.markdown("## Quarterback Analysis")
+        st.markdown("##  QUARTERBACK ANALYSIS")
         
-        st.write("""
-        **The Signal Callers:** Quarterbacks are the heart of every offense. From Peyton Manning's precision 
-        to Tom Brady's clutch performances, this section shows who threw for the most yards, touchdowns, and 
-        efficiency. Watch legends compete and new stars emerge.
-        """)
+        st.markdown("""
+        <div style='background: linear-gradient(135deg, rgba(26, 26, 46, 0.8) 0%, rgba(22, 33, 62, 0.8) 100%); 
+                    padding: 20px; border-radius: 12px; border-left: 4px solid #4ECDC4; margin-bottom: 25px;'>
+            <p style='color: #FFFFFF; font-size: 1.05rem; line-height: 1.6; margin: 0;'>
+                <strong style='color: #4ECDC4;'> The Signal Callers:</strong> Quarterbacks define offenses and franchises. 
+                From Peyton Manning's precision to Tom Brady's clutch performances, this section chronicles who threw for 
+                the most yards, touchdowns, and efficiency. Watch legends compete and new stars emerge.
+            </p>
+        </div>
+        """, unsafe_allow_html=True)
         
         qb_data = df_filtered[df_filtered['passer_player_name'].notna()].copy()
         
-        # Racing Bar Chart - QB Passing Yards
-        st.markdown("### Racing Bar: Top Quarterbacks by Passing Yards")
-        st.caption("Animated timeline showing career passing yard accumulation. Team colors show franchise affiliations.")
+        # RACING BAR CHART - Top QBs by Passing Yards
+        st.markdown("###  Racing Bar: Top Quarterbacks by Passing Yards")
+        st.caption(" Animated timeline showing career passing yard accumulation. Team colors indicate franchise affiliations.")
         
         # Calculate cumulative yards per QB per year with smooth transitions
         qb_frames = []
@@ -1077,7 +1139,7 @@ def main():
         col1, col2 = st.columns(2)
         
         with col1:
-            st.caption("**Career Yards:** Total passing yards show QB longevity and production.")
+            st.caption(" **Cumulative Career Yards:** Total passing yards define QB longevity and production. Each dot represents a quarterback's decade-long output.")
             # QB Passing Yards - Lollipop Chart
             qb_yards = qb_data.groupby('passer_player_name')['yards_gained'].sum().nlargest(15)
             
@@ -1123,7 +1185,7 @@ def main():
             plt.close()
         
         with col2:
-            st.caption("**Touchdown Leaders:** The decade's most prolific scorers through the air.")
+            st.caption(" **Touchdown Leaders:** Finding the end zone separates good QBs from great ones. These are the decade's most prolific scorers through the air.")
             # QB Touchdowns with Team Colors
             qb_tds = qb_data.groupby('passer_player_name')['touchdown'].sum().nlargest(15)
             
@@ -1160,8 +1222,8 @@ def main():
             st.plotly_chart(fig_qb_tds, width="stretch")
         
         # QB Efficiency (EPA)
-        st.markdown("### QB Efficiency - EPA Analysis")
-        st.caption("**Efficiency Matters:** EPA (Expected Points Added) shows game-changing impact. Top-right = QBs with high volume and elite efficiency.")
+        st.markdown("###  QB Efficiency - EPA Analysis")
+        st.caption(" **Efficiency Matters:** EPA (Expected Points Added) measures game-changing impact per play. Top-right quadrant reveals QBs who combined high volume with elite efficiency.")
         qb_epa = qb_data.groupby('passer_player_name').agg({
             'epa': 'mean',
             'pass_attempt': 'sum'
@@ -1198,19 +1260,24 @@ def main():
     
     # TAB 3: RUNNING BACKS WITH RACING BAR
     with tab3:
-        st.markdown("## Running Back Analysis")
+        st.markdown("##  RUNNING BACK ANALYSIS")
         
-        st.write("""
-        **Ground Game Warriors:** Despite the league's shift toward passing, running backs remain the physical 
-        heartbeat of offenses. Watch legends like Adrian Peterson and Marshawn Lynch dominate through power and vision. 
-        See which backs sustained excellence across multiple seasons.
-        """)
+        st.markdown("""
+        <div style='background: linear-gradient(135deg, rgba(26, 26, 46, 0.8) 0%, rgba(22, 33, 62, 0.8) 100%); 
+                    padding: 20px; border-radius: 12px; border-left: 4px solid #06FFA5; margin-bottom: 25px;'>
+            <p style='color: #FFFFFF; font-size: 1.05rem; line-height: 1.6; margin: 0;'>
+                <strong style='color: #06FFA5;'> Ground Game Warriors:</strong> Despite the league's evolution toward passing, 
+                running backs remain the physical heartbeat of offenses. Watch legends like Adrian Peterson and Marshawn Lynch 
+                dominate through power and vision. The racing bars reveal which backs sustained excellence across multiple seasons.
+            </p>
+        </div>
+        """, unsafe_allow_html=True)
         
         rb_data = df_filtered[df_filtered['rusher_player_name'].notna()].copy()
         
-        # Racing Bar Chart - RB Rushing Yards
-        st.markdown("### Racing Bar: Top Running Backs by Rushing Yards")
-        st.caption("**Decade of Dominance:** Track how elite backs accumulated career rushing yards. Colors = team affiliations.")
+        # RACING BAR CHART - Top RBs by Rushing Yards
+        st.markdown("###  Racing Bar: Top Running Backs by Rushing Yards")
+        st.caption(" **Decade of Dominance:** Track how elite backs accumulated career rushing yards. Colors represent team affiliations - notice when stars change jerseys.")
         
         # Calculate cumulative yards per RB per year with smooth transitions
         rb_frames = []
@@ -1322,7 +1389,7 @@ def main():
         col1, col2 = st.columns(2)
         
         with col1:
-            st.caption("**Top 15 Rushers:** The decade's workhorses who carried their teams.")
+            st.caption(" **Workhorses of the Decade:** These 15 backs carried their teams on their shoulders. The lollipop stems show the massive yardage gaps between elite and great backs.")
             # Top RBs by Rushing Yards - Lollipop Chart
             rb_yards = rb_data.groupby('rusher_player_name')['yards_gained'].sum().nlargest(15)
             
@@ -1368,7 +1435,7 @@ def main():
             plt.close()
         
         with col2:
-            st.caption("**Red Zone Leaders:** Backs who scored the most TDs.")
+            st.caption(" **Red Zone Beasts:** When teams needed those critical yards near the goal line, these backs delivered. TD totals reveal who was most trusted in scoring position.")
             # RB Touchdowns with Team Colors
             rb_tds = rb_data.groupby('rusher_player_name')['touchdown'].sum().nlargest(15)
             
@@ -1442,19 +1509,24 @@ def main():
     
     # TAB 4: WIDE RECEIVERS
     with tab4:
-        st.markdown("## Wide Receiver Analysis")
+        st.markdown("##  WIDE RECEIVER ANALYSIS")
         
-        st.write("""
-        **Playmakers & Game-Breakers:** Wide receivers combine speed, hands, and route-running precision. 
-        From Calvin Johnson's dominance to Antonio Brown's consistency, watch the players who changed games 
-        with a single catch.
-        """)
+        st.markdown("""
+        <div style='background: linear-gradient(135deg, rgba(26, 26, 46, 0.8) 0%, rgba(22, 33, 62, 0.8) 100%); 
+                    padding: 20px; border-radius: 12px; border-left: 4px solid #FF6B35; margin-bottom: 25px;'>
+            <p style='color: #FFFFFF; font-size: 1.05rem; line-height: 1.6; margin: 0;'>
+                <strong style='color: #FF6B35;'> Playmakers & Game-Breakers:</strong> Wide receivers are the artists of football - 
+                combining speed, hands, and route-running precision. From Calvin Johnson's dominance to Antonio Brown's consistency, 
+                this section showcases the players who changed games with a single catch. Watch the legends separate themselves.
+            </p>
+        </div>
+        """, unsafe_allow_html=True)
         
         wr_data = df_filtered[df_filtered['receiver_player_name'].notna()].copy()
         
-        # Racing Bar Chart - WR Receiving Yards
-        st.markdown("### Racing Bar: Top Wide Receivers by Receiving Yards")
-        st.caption("**Elite Pass Catchers:** Follow the career progressions of the decade's best receivers.")
+        # RACING BAR CHART - Top WRs by Receiving Yards
+        st.markdown("###  Racing Bar: Top Wide Receivers by Receiving Yards")
+        st.caption(" **Elite Pass Catchers:** Follow the career progressions of the decade's best receivers. Each bar's movement tells a story of consistency and explosive seasons.")
         
         # Calculate cumulative yards per WR per year with smooth transitions
         wr_frames = []
@@ -1567,7 +1639,7 @@ def main():
         col1, col2 = st.columns(2)
         
         with col1:
-            st.caption("**Top Receivers:** The decade's leaders in receiving yards.")
+            st.caption(" **Elite Pass Catchers:** These receivers define excellence - combining route precision, reliable hands, and game-breaking speed to accumulate massive receiving yards.")
             # Top WRs by Receiving Yards - Lollipop Chart
             wr_yards = wr_data.groupby('receiver_player_name')['yards_gained'].sum().nlargest(15)
             
@@ -1613,7 +1685,7 @@ def main():
             plt.close()
         
         with col2:
-            st.caption("**Touchdown Makers:** Receivers who scored the most TDs.")
+            st.caption(" **Touchdown Makers:** Finding the end zone is the ultimate WR achievement. These pass catchers turned opportunities into points with remarkable consistency.")
             # WR Touchdowns with Team Colors
             wr_tds = wr_data.groupby('receiver_player_name')['touchdown'].sum().nlargest(15)
             
@@ -1650,7 +1722,7 @@ def main():
         
         # WR Receptions and Yards per Reception
         st.markdown("###  Reception Efficiency Analysis")
-        st.caption("**Volume vs Explosiveness:** Top-right = high catches + big yards per catch.")
+        st.caption(" **Volume vs Explosiveness:** Top-right quadrant shows rare receivers who combine high catch totals with big yards per catch. These are the true game-breakers.")
         wr_stats = wr_data.groupby('receiver_player_name').agg({
             'yards_gained': ['sum', 'mean'],
             'complete_pass': 'sum'
@@ -1688,26 +1760,32 @@ def main():
     
     # TAB 5: DEFENSE ANALYSIS - CONSOLIDATED
     with tab5:
-        st.markdown("## Elite Defensive Units & Playmakers")
+        st.markdown("##  ELITE DEFENSIVE UNITS & PLAYMAKERS")
         
-        st.write("""
-        **Defense Wins Championships:** While offense fills highlight reels, defense wins titles. This section 
-        reveals which units excelled at forcing turnovers, disrupting quarterbacks, and preventing points. 
-        Four visualizations tell the complete defensive story.
-        """)
+        st.markdown("""
+        <div style='background: linear-gradient(135deg, rgba(26, 26, 46, 0.8) 0%, rgba(22, 33, 62, 0.8) 100%); 
+                    padding: 20px; border-radius: 12px; border-left: 4px solid #00D9FF; margin-bottom: 25px;'>
+            <p style='color: #FFFFFF; font-size: 1.05rem; line-height: 1.6; margin: 0;'>
+                <strong style='color: #00D9FF;'> Defense Wins Championships:</strong> While offense fills highlights, 
+                defense wins titles. This section reveals which units excelled at forcing turnovers, disrupting quarterbacks, 
+                and preventing points. Four integrated visualizations tell the complete defensive story from multiple angles.
+            </p>
+        </div>
+        """, unsafe_allow_html=True)
         
-        st.caption("""
-        **Four-Panel Analysis:** Top-left = interception leaders (polar), top-right = multi-category performance (heatmap), 
-        bottom-left = sacks vs turnovers (scatter), bottom-right = elite unit comparison (violin plots).
-        """)
+        st.caption(" **Four-Panel Analysis:** Top-left shows interception leaders (polar chart), top-right displays multi-category performance (heatmap), bottom-left reveals sacks-turnover correlation (scatter), bottom-right compares elite units (violin plots). Together, these visualizations tell the complete defensive story.")
         
-        st.info("""
-        **How to Read:** 
-        - **Polar Chart:** Longer bars = more interceptions
-        - **Heatmap:** Brighter = better across sacks, INTs, forced fumbles
-        - **Scatter:** Top-right quadrant = teams strong in both sacks and turnovers
-        - **Violin:** Wider shapes = more variability in performance
-        """)
+        st.markdown("""
+        <div style='background: rgba(0, 217, 255, 0.1); padding: 12px; border-radius: 8px; border-left: 3px solid #00D9FF; margin: 15px 0;'>
+            <p style='color: #FFFFFF; font-size: 0.9rem; line-height: 1.5; margin: 0;'>
+                <strong style='color: #00D9FF;'> How to Read:</strong> 
+                <strong>Polar Chart:</strong> Interception leaders radiate outward. 
+                <strong>Heatmap:</strong> Brighter colors = better performance across sacks, INTs, forced fumbles. 
+                <strong>Scatter:</strong> Top-right quadrant = teams excelling in both sacks and turnovers. 
+                <strong>Violin:</strong> Wider shapes show more variability in defensive performance.
+            </p>
+        </div>
+        """, unsafe_allow_html=True)
         
         # Create consolidated matplotlib figure - 2x2 grid
         fig_defense, axes_def = plt.subplots(2, 2, figsize=(20, 16))
@@ -2056,15 +2134,20 @@ def main():
 
     # TAB 6: SEABORN ANALYSIS
     with tab6:
-        st.markdown("## Seaborn Statistical Analysis")
+        st.markdown("##  SEABORN STATISTICAL ANALYSIS")
         
-        st.write("""
-        **Statistical Deep Dive:** Move beyond basic stats into advanced analytics. These six visualizations 
-        explore win probability curves, yard distributions, play correlations, and situational performance. 
-        Perfect for data enthusiasts seeking deeper insights.
-        """)
+        st.markdown("""
+        <div style='background: linear-gradient(135deg, rgba(26, 26, 46, 0.8) 0%, rgba(22, 33, 62, 0.8) 100%); 
+                    padding: 20px; border-radius: 12px; border-left: 4px solid #9D4EDD; margin-bottom: 25px;'>
+            <p style='color: #FFFFFF; font-size: 1.05rem; line-height: 1.6; margin: 0;'>
+                <strong style='color: #9D4EDD;'> Statistical Deep Dive:</strong> Move beyond basic stats into advanced 
+                analytics. These six visualizations explore win probability curves, yard distributions, play correlations, 
+                and situational performance. Perfect for data enthusiasts seeking deeper insights.
+            </p>
+        </div>
+        """, unsafe_allow_html=True)
         
-        st.caption("**Reading tip:** Look for patterns, outliers, and correlations. Each chart reveals different aspects of game dynamics.")
+        st.caption(" **Reading tip:** Look for patterns, outliers, and correlations. Each chart reveals different aspects of game dynamics and player efficiency.")
         
         # Set seaborn style
         sns.set_style("darkgrid")
@@ -2179,7 +2262,7 @@ def main():
         
         # Additional Seaborn Analysis
         st.markdown("###  Pass vs Rush Comparison")
-        st.caption("**Offensive Philosophy:** Passing = higher upside, Rushing = steadier gains.")
+        st.caption(" **Offensive Philosophy:** Compare the risk-reward of passing vs rushing. Passing offers higher upside but more variance, while rushing provides steadier but smaller gains.")
         col1, col2 = st.columns(2)
         
         with col1:
