@@ -13,6 +13,14 @@ from datetime import datetime
 import warnings
 import os
 from pathlib import Path
+
+# Try to import kagglehub for cloud deployment
+try:
+    import kagglehub
+    KAGGLEHUB_AVAILABLE = True
+except ImportError:
+    KAGGLEHUB_AVAILABLE = False
+
 warnings.filterwarnings('ignore')
 
 # Get the directory where this script is located
@@ -303,25 +311,50 @@ NFL_LOCATIONS = {
 # Load Data with Caching
 @st.cache_data(show_spinner=False)
 def load_data():
-    """Load NFL play-by-play data from 2009-2018 from local file"""
+    """Load NFL play-by-play data from 2009-2018"""
+    # Try local file first (for development)
     csv_file = SCRIPT_DIR / "datasets" / "NFL Play by Play 2009-2018 (v5).csv"
     
-    if not csv_file.exists():
+    if csv_file.exists():
+        # Load from local file (development)
+        try:
+            df = pd.read_csv(csv_file, low_memory=False)
+        except Exception as e:
+            st.error(f"Error loading local dataset: {str(e)}")
+            st.stop()
+    elif KAGGLEHUB_AVAILABLE:
+        # Download from Kaggle (cloud deployment)
+        try:
+            st.info("📥 Downloading NFL dataset from Kaggle (first run only)...")
+            path = kagglehub.dataset_download("maxhorowitz/nflplaybyplay2009to2016")
+            csv_path = Path(path) / "NFL Play by Play 2009-2018 (v5).csv"
+            df = pd.read_csv(csv_path, low_memory=False)
+        except Exception as e:
+            st.error(f"""
+            ### Dataset Download Failed
+            
+            Could not download dataset from Kaggle: {str(e)}
+            
+            **For local development:**
+            1. Download from: https://www.kaggle.com/datasets/maxhorowitz/nflplaybyplay2009to2016
+            2. Place "NFL Play by Play 2009-2018 (v5).csv" in: `{csv_file.parent}`
+            3. Refresh this page
+            """)
+            st.stop()
+    else:
         st.error("""
-        ### Dataset Not Found
+        ### Dataset Not Available
         
         Please download the NFL dataset:
         
         1. Go to: https://www.kaggle.com/datasets/maxhorowitz/nflplaybyplay2009to2016
         2. Download **"NFL Play by Play 2009-2018 (v5).csv"**
-        3. Place it in the same directory as this app:
-           `{}`
+        3. Create a `datasets` folder and place the file there
         4. Refresh this page
-        """.format(csv_file.parent))
+        """)
         st.stop()
     
     try:
-        df = pd.read_csv(csv_file, low_memory=False)
         df['game_date'] = pd.to_datetime(df['game_date'])
         df['year'] = df['game_date'].dt.year
         df = df[(df['year'] >= 2009) & (df['year'] <= 2018)].copy()
@@ -332,7 +365,8 @@ def load_data():
         
         return df
     except Exception as e:
-        st.error(f"Error loading dataset: {str(e)}")
+        st.error(f"Error processing dataset: {str(e)}")
+        st.stop()
         st.stop()
 
 def main():
