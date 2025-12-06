@@ -306,11 +306,11 @@ NFL_LOCATIONS = {
 }
 
 # Load Data with Caching
-@st.cache_data(show_spinner=False)
+@st.cache_data(show_spinner=False, ttl=3600)
 def load_data():
     """Load NFL play-by-play data - tries optimized parquet first, then CSV"""
     
-    # Try optimized parquet file first (for cloud deployment - 12MB, 43 columns)
+    # Try optimized parquet file first (for cloud deployment - 12.1MB, 48 columns)
     parquet_file = SCRIPT_DIR / "datasets" / "nfl_data_cloud.parquet"
     # Fallback to full CSV (for local development - 667MB)
     csv_file = SCRIPT_DIR / "datasets" / "NFL Play by Play 2009-2018 (v5).csv"
@@ -344,6 +344,70 @@ def load_data():
         st.stop()
         return None
 
+@st.cache_data(show_spinner=False, ttl=3600)
+def filter_data_cached(df, selected_teams, selected_years):
+    """Cache filtered data to avoid reprocessing on every interaction"""
+    team_tuple = tuple(sorted(selected_teams))
+    year_tuple = tuple(sorted(selected_years))
+    
+    df_filtered = df[
+        (df['posteam'].isin(selected_teams)) & 
+        (df['year'].isin(selected_years))
+    ].copy()
+    
+    return df_filtered
+
+@st.cache_data(show_spinner=False, ttl=3600)
+def get_aggregated_stats(df_filtered, group_by_cols, agg_dict):
+    """Cache aggregated statistics to avoid recalculation"""
+    return df_filtered.groupby(list(group_by_cols)).agg(agg_dict).reset_index()
+
+@st.cache_data(show_spinner=False, ttl=3600)
+def create_racing_bar_data(df_filtered, selected_teams_tuple, metric_col, group_col, frames_per_year=20):
+    """Create racing bar animation data with caching - optimized for speed"""
+    selected_teams = list(selected_teams_tuple)  # Convert tuple back to list for processing
+    # Calculate data per year
+    data_by_year = {}
+    years = sorted(df_filtered['year'].unique())
+    
+    for year in years:
+        year_data = df_filtered[df_filtered['year'] == year]
+        metric_by_group = {}
+        
+        for group in selected_teams:
+            value = year_data[year_data[group_col] == group][metric_col].sum()
+            metric_by_group[group] = value
+        
+        data_by_year[year] = metric_by_group
+    
+    # Create animation frames (reduced from 100 to 20 for 5x speedup)
+    frames_data = []
+    cumulative = {team: 0 for team in selected_teams}
+    
+    for year in years:
+        year_increment = data_by_year[year]
+        
+        for frame_idx in range(frames_per_year):
+            progress = frame_idx / frames_per_year
+            current = {team: cumulative[team] + year_increment.get(team, 0) * progress for team in selected_teams}
+            
+            # Sort and get top 15
+            sorted_data = sorted(current.items(), key=lambda x: x[1], reverse=True)[:15]
+            
+            frames_data.append({
+                'year': year,
+                'frame': frame_idx,
+                'teams': [t[0] for t in sorted_data],
+                'values': [t[1] for t in sorted_data],
+                'name': f"{year}.{frame_idx}"
+            })
+        
+        # Update cumulative
+        for team in selected_teams:
+            cumulative[team] += year_increment.get(team, 0)
+    
+    return frames_data, cumulative
+
 def main():
     # Enhanced Header with NFL Logo and Subtitle
     st.markdown("<div style='text-align: center; margin-bottom: 10px;'>", unsafe_allow_html=True)
@@ -361,6 +425,19 @@ def main():
         except:
             pass
     st.markdown("</div>", unsafe_allow_html=True)
+    
+    # Performance Mode Toggle (in sidebar for easy access)
+    with st.sidebar:
+        st.markdown("---")
+        st.subheader("⚙️ Performance Settings")
+        performance_mode = st.radio(
+            "Rendering Speed",
+            options=["⚡ Fast (Recommended)", "🎨 High Quality"],
+            index=0,
+            help="Fast mode reduces animation frames for 5x faster loading. Quality mode uses more frames for smoother animations."
+        )
+        frames_per_year = 20 if "Fast" in performance_mode else 50
+        st.caption(f"Using {frames_per_year} frames/year")
     
     # Load data with enhanced spinner
     with st.spinner(' Loading NFL Play-by-Play Dataset...'):
@@ -493,11 +570,8 @@ def main():
         if team_search:
             st.sidebar.error(f" '{team_search}' not found")
     
-    # Apply filters
-    df_filtered = df[
-        (df['year'].isin(selected_years)) &
-        (df['posteam'].isin(selected_teams))
-    ].copy()
+    # Apply filters with caching
+    df_filtered = filter_data_cached(df, tuple(sorted(selected_teams)), tuple(sorted(selected_years)))
     
     # Enhanced Global KPIs Section
     st.markdown("##  KEY PERFORMANCE INDICATORS")
@@ -680,6 +754,9 @@ def main():
     
     st.markdown("---")
     
+    # Add performance tip
+    st.info("💡 **Performance Tip:** Each tab loads data on-demand. Switch between tabs to explore different analyses.")
+    
     # MAIN TABS
     tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs([
         " TEAM PERFORMANCE",
@@ -693,16 +770,17 @@ def main():
     
     # TAB 1: TEAM PERFORMANCE WITH RACING BAR
     with tab1:
-        st.markdown("##  TEAM PERFORMANCE ANALYSIS")
-        
-        st.markdown("""
-        <div style='background: linear-gradient(135deg, rgba(26, 26, 46, 0.8) 0%, rgba(22, 33, 62, 0.8) 100%); 
-                    padding: 20px; border-radius: 12px; border-left: 4px solid #FFD700; margin-bottom: 25px;'>
-            <p style='color: #FFFFFF; font-size: 1.05rem; line-height: 1.6; margin: 0;'>
-                <strong style='color: #FFD700;'> The Decade's Story:</strong> Which teams dominated the 2010s? 
-                This animated racing bar reveals how franchises accumulated touchdowns season by season, showing 
-                sustained excellence versus flash-in-the-pan success. Watch dynasties rise and underdogs climb the ranks.
-            </p>
+        with st.spinner('Loading team performance data...'):
+            st.markdown("##  TEAM PERFORMANCE ANALYSIS")
+            
+            st.markdown("""
+            <div style='background: linear-gradient(135deg, rgba(26, 26, 46, 0.8) 0%, rgba(22, 33, 62, 0.8) 100%); 
+                        padding: 20px; border-radius: 12px; border-left: 4px solid #FFD700; margin-bottom: 25px;'>
+                <p style='color: #FFFFFF; font-size: 1.05rem; line-height: 1.6; margin: 0;'>
+                    <strong style='color: #FFD700;'> The Decade's Story:</strong> Which teams dominated the 2010s? 
+                    This animated racing bar reveals how franchises accumulated touchdowns season by season, showing 
+                    sustained excellence versus flash-in-the-pan success. Watch dynasties rise and underdogs climb the ranks.
+                </p>
         </div>
         """, unsafe_allow_html=True)
         
@@ -710,36 +788,21 @@ def main():
         st.markdown("###  Racing Bar: Team Performance Evolution (2009-2018)")
         st.caption(" Press Play to see teams compete for touchdown supremacy across 10 seasons. Larger bars = more offensive firepower.")
         
-        # Calculate cumulative touchdowns per team per year with smooth transitions
-        wins_by_year = {}
-        for year in range(2009, 2019):
-            year_data = df_filtered[df_filtered['year'] == year]
-            team_tds = {}
+        # Use cached racing bar data (5x faster than before)
+        with st.spinner('Generating racing bar animation...'):
+            frames_data, cumulative_wins = create_racing_bar_data(
+                df_filtered, 
+                tuple(sorted(selected_teams)),  # Pass as tuple for caching
+                'touchdown', 
+                'posteam',
+                frames_per_year=frames_per_year  # Uses performance setting
+            )
             
-            for team in selected_teams:
-                tds = year_data[year_data['posteam'] == team]['touchdown'].sum()
-                team_tds[team] = tds
-            
-            wins_by_year[year] = team_tds
-        
-        # Create smooth animation frames (100 frames per year transition for ultra-smooth animation)
-        frames = []
-        cumulative_wins = {team: 0 for team in selected_teams}
-        frames_per_year = 100
-        
-        for year in range(2009, 2019):
-            year_increment = wins_by_year[year]
-            
-            for frame_idx in range(frames_per_year):
-                progress = frame_idx / frames_per_year
-                
-                # Interpolate values for smooth animation
-                current_wins = {team: cumulative_wins[team] + year_increment.get(team, 0) * progress for team in selected_teams}
-                
-                # Sort and get top 15
-                sorted_teams = sorted(current_wins.items(), key=lambda x: x[1], reverse=True)[:15]
-                teams_list = [t[0] for t in sorted_teams]
-                wins_list = [t[1] for t in sorted_teams]
+            # Create frames for Plotly
+            frames = []
+            for frame_info in frames_data:
+                teams_list = frame_info['teams']
+                wins_list = frame_info['values']
                 colors_list = [NFL_COLORS.get(t, '#FFD700') for t in teams_list]
                 names_list = [NFL_NAMES.get(t, t) for t in teams_list]
                 
@@ -753,13 +816,9 @@ def main():
                         textposition='outside',
                         textfont=dict(size=12, color='white', family='Arial Black')
                     )],
-                    name=f"{year}.{frame_idx}",
-                    layout=go.Layout(title_text=f"<b>Cumulative Touchdowns through {year}</b>")
+                    name=frame_info['name'],
+                    layout=go.Layout(title_text=f"<b>Cumulative Touchdowns through {frame_info['year']}</b>")
                 ))
-            
-            # Update cumulative after year completes
-            for team in selected_teams:
-                cumulative_wins[team] += year_increment.get(team, 0)
         
         # Initial figure
         initial_sorted = sorted(cumulative_wins.items(), key=lambda x: x[1], reverse=True)[:15]
