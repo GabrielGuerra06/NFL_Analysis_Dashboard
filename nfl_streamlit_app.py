@@ -749,7 +749,7 @@ def main():
             margin=dict(l=0, r=0, t=80, b=20)
         )
         
-        st.plotly_chart(fig_map, use_container_width=True)
+        st.plotly_chart(fig_map, width="stretch")
     
     st.markdown("---")
     
@@ -972,7 +972,7 @@ def main():
                 font=dict(color='white'),
                 height=500
             )
-            st.plotly_chart(fig_epa, use_container_width=True)
+            st.plotly_chart(fig_epa, width="stretch")
         
         # Yards Evolution Over Time
         st.markdown("###  Yards Evolution by Year")
@@ -1004,7 +1004,7 @@ def main():
             hovermode='x unified',
             legend=dict(bgcolor='#1a1a2e', bordercolor='#FFD700', borderwidth=2)
         )
-        st.plotly_chart(fig_evolution, use_container_width=True)
+        st.plotly_chart(fig_evolution, width="stretch")
     
     # TAB 2: QUARTERBACK STATS WITH RACING BAR
     with tab2:
@@ -1220,7 +1220,7 @@ def main():
                 font=dict(color='white'),
                 height=550
             )
-            st.plotly_chart(fig_qb_tds, use_container_width=True)
+            st.plotly_chart(fig_qb_tds, width="stretch")
         
         # QB Efficiency (EPA)
         st.markdown("###  QB Efficiency - EPA Analysis")
@@ -1257,7 +1257,7 @@ def main():
             font=dict(color='white'),
             height=600
         )
-        st.plotly_chart(fig_qb_epa, use_container_width=True)
+        st.plotly_chart(fig_qb_epa, width="stretch")
     
     # TAB 3: RUNNING BACKS WITH RACING BAR
     with tab3:
@@ -1469,7 +1469,7 @@ def main():
                 font=dict(color='white'),
                 height=550
             )
-            st.plotly_chart(fig_rb_tds, use_container_width=True)
+            st.plotly_chart(fig_rb_tds, width="stretch")
         
         # RB Yards per Carry
         st.markdown("###  Yards per Carry Analysis")
@@ -1506,7 +1506,7 @@ def main():
             font=dict(color='white'),
             height=600
         )
-        st.plotly_chart(fig_rb_ypc, use_container_width=True)
+        st.plotly_chart(fig_rb_ypc, width="stretch")
     
     # TAB 4: WIDE RECEIVERS
     with tab4:
@@ -1719,7 +1719,7 @@ def main():
                 font=dict(color='white'),
                 height=550
             )
-            st.plotly_chart(fig_wr_tds, use_container_width=True)
+            st.plotly_chart(fig_wr_tds, width="stretch")
         
         # WR Receptions and Yards per Reception
         st.markdown("###  Reception Efficiency Analysis")
@@ -1757,7 +1757,7 @@ def main():
             font=dict(color='white'),
             height=600
         )
-        st.plotly_chart(fig_wr_efficiency, use_container_width=True)
+        st.plotly_chart(fig_wr_efficiency, width="stretch")
     
     # TAB 5: DEFENSE ANALYSIS - CONSOLIDATED
     with tab5:
@@ -2809,3 +2809,4 @@ if __name__ == "__main__":
         """)
         import traceback
         st.code(traceback.format_exc())
+
