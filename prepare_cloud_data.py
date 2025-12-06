@@ -20,7 +20,7 @@ def create_cloud_dataset():
     
     # Essential columns for the dashboard
     essential_columns = [
-        'game_id', 'game_date', 'posteam', 'defteam', 'home_team', 'away_team',
+        'game_id', 'play_id', 'game_date', 'posteam', 'defteam', 'home_team', 'away_team',
         'yards_gained', 'play_type', 'touchdown', 'pass_touchdown', 'rush_touchdown',
         'interception', 'fumble', 'sack', 'safety', 'field_goal_result',
         'extra_point_result', 'two_point_conv_result', 'passer_player_name',
