@@ -31,7 +31,8 @@ def create_cloud_dataset():
         'field_goal_result', 'extra_point_result', 'two_point_conv_result',
         
         # Turnovers and defense
-        'interception', 'fumble', 'sack', 'safety',
+        'interception', 'fumble', 'fumble_lost', 'fumble_recovery_1_team', 
+        'sack', 'qb_hit', 'safety',
         
         # Pass specific
         'pass_attempt', 'complete_pass', 'incomplete_pass', 'air_yards', 'yards_after_catch',
