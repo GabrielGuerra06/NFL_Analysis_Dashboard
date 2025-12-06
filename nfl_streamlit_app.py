@@ -326,7 +326,7 @@ def main():
     csv_file = SCRIPT_DIR / "datasets" / "NFL Play by Play 2009-2018 (v5).csv"
     
     if not csv_file.exists():
-        # Show error page with clear instructions
+        # Show error page with clear instructions (no logos needed)
         st.markdown("<h1 style='text-align: center; color: #FFD700;'>🏈 NFL DECADE ANALYTICS DASHBOARD</h1>", unsafe_allow_html=True)
         st.markdown("---")
         st.error("""
@@ -377,17 +377,23 @@ def main():
         
         Check out the [GitHub Repository](https://github.com/GabrielGuerra06/NFL_Analysis_Dashboard) to explore the code!
         """)
-        st.stop()
+        return  # Exit early without loading rest of UI
     
-    # Enhanced Header with NFL Logo and Subtitle
+    # Enhanced Header with NFL Logo and Subtitle (only loads if dataset exists)
     st.markdown("<div style='text-align: center; margin-bottom: 10px;'>", unsafe_allow_html=True)
     col_logo1, col_title, col_logo2 = st.columns([1, 4, 1])
     with col_logo1:
-        st.image(str(LOGOS_DIR / "nfl_logo.png"), width=120)
+        try:
+            st.image(str(LOGOS_DIR / "nfl_logo.png"), width=120)
+        except:
+            pass
     with col_title:
         st.markdown("<h1>NFL DECADE ANALYTICS DASHBOARD</h1>", unsafe_allow_html=True)
     with col_logo2:
-        st.image(str(LOGOS_DIR / "nfl_logo.png"), width=120)
+        try:
+            st.image(str(LOGOS_DIR / "nfl_logo.png"), width=120)
+        except:
+            pass
     st.markdown("</div>", unsafe_allow_html=True)
     
     # Load data with enhanced spinner
