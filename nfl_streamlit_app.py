@@ -334,14 +334,13 @@ def load_data():
         return None
 
 def main():
-    # Check if dataset exists FIRST - before ANY UI rendering
+    # Check if dataset exists before showing main UI
     csv_file = SCRIPT_DIR / "datasets" / "NFL Play by Play 2009-2018 (v5).csv"
     
     if not csv_file.exists():
-        # Dataset missing - show error page (minimal UI, no data loading)
+        # Show error page with clear instructions (no logos needed)
         st.markdown("<h1 style='text-align: center; color: #FFD700;'>🏈 NFL DECADE ANALYTICS DASHBOARD</h1>", unsafe_allow_html=True)
         st.markdown("---")
-        
         st.error("""
         ### 📊 Dataset Required
         
@@ -390,19 +389,9 @@ def main():
         
         Check out the [GitHub Repository](https://github.com/GabrielGuerra06/NFL_Analysis_Dashboard) to explore the code!
         """)
-        
-        # Show debug info in expander
-        with st.expander("🔧 Debug Information"):
-            st.write(f"**Script Directory:** `{SCRIPT_DIR}`")
-            st.write(f"**Looking for CSV at:** `{csv_file}`")
-            st.write(f"**File exists:** `{csv_file.exists()}`")
-        
-        # CRITICAL: Stop execution here - don't continue to the rest of the app
-        st.stop()
-        return
+        return  # Exit early without loading rest of UI
     
-    # Dataset exists - render full dashboard
-    # Enhanced Header with NFL Logo and Subtitle
+    # Enhanced Header with NFL Logo and Subtitle (only loads if dataset exists)
     st.markdown("<div style='text-align: center; margin-bottom: 10px;'>", unsafe_allow_html=True)
     col_logo1, col_title, col_logo2 = st.columns([1, 4, 1])
     with col_logo1:
