@@ -18,7 +18,10 @@ from pathlib import Path
 warnings.filterwarnings('ignore')
 
 # Get the directory where this script is located
-SCRIPT_DIR = Path(__file__).parent
+try:
+    SCRIPT_DIR = Path(__file__).parent
+except:
+    SCRIPT_DIR = Path.cwd()
 LOGOS_DIR = SCRIPT_DIR / "NFL_Logos"
 
 # Page Configuration
@@ -308,6 +311,12 @@ def load_data():
     """Load NFL play-by-play data from 2009-2018"""
     csv_file = SCRIPT_DIR / "datasets" / "NFL Play by Play 2009-2018 (v5).csv"
     
+    # Double-check file exists (should have been checked in main, but just in case)
+    if not csv_file.exists():
+        st.error("Dataset file not found. This should not happen - please report this error.")
+        st.stop()
+        return None
+    
     try:
         df = pd.read_csv(csv_file, low_memory=False)
         df['game_date'] = pd.to_datetime(df['game_date'])
@@ -322,6 +331,7 @@ def load_data():
     except Exception as e:
         st.error(f"Error loading dataset: {str(e)}")
         st.stop()
+        return None
 
 def main():
     # Check if dataset exists before showing main UI
