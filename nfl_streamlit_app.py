@@ -13,14 +13,6 @@ from datetime import datetime
 import warnings
 import os
 from pathlib import Path
-
-# Try to import kagglehub for cloud deployment
-try:
-    import kagglehub
-    KAGGLEHUB_AVAILABLE = True
-except ImportError:
-    KAGGLEHUB_AVAILABLE = False
-
 warnings.filterwarnings('ignore')
 
 # Get the directory where this script is located
