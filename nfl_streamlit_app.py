@@ -337,6 +337,11 @@ def main():
     # Check if dataset exists before showing main UI
     csv_file = SCRIPT_DIR / "datasets" / "NFL Play by Play 2009-2018 (v5).csv"
     
+    # Debug info for Streamlit Cloud
+    st.sidebar.write(f"Script dir: {SCRIPT_DIR}")
+    st.sidebar.write(f"CSV path: {csv_file}")
+    st.sidebar.write(f"File exists: {csv_file.exists()}")
+    
     if not csv_file.exists():
         # Show error page with clear instructions (no logos needed)
         st.markdown("<h1 style='text-align: center; color: #FFD700;'>🏈 NFL DECADE ANALYTICS DASHBOARD</h1>", unsafe_allow_html=True)
